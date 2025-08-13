@@ -38,11 +38,16 @@ export default function App(){
   const [stats, setStats] = useState(null)
   const [orders, setOrders] = useState([])
 
-  useEffect(()=>{
-    const api = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-    axios.get(`${api}/api/stats`).then(r=>setStats(r.data)).catch(()=>{})
-    axios.get(`${api}/api/orders`).then(r=>setOrders(r.data.orders || [])).catch(()=>{})
-  },[])
+useEffect(() => {
+  const api = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '') // supprime le slash final
+  axios.get(`${api}/api/stats`)
+    .then(r => setStats(r.data))
+    .catch(err => console.error(err))
+
+  axios.get(`${api}/api/orders`)
+    .then(r => setOrders(r.data.orders || []))
+    .catch(err => console.error(err))
+}, [])
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
